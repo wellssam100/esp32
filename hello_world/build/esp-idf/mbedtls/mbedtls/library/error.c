@@ -1,1 +1,0 @@
-/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/mbedtls/mbedtls/library/error.c
