@@ -67,7 +67,7 @@ void scan_i2c_devices(i2c_master_bus_handle_t bus_handle){
         esp_err_t ret = i2c_master_transmit(dev_handle, write_buf, sizeof(write_buf), 1000 / portTICK_PERIOD_MS);
         if (ret == ESP_OK){
             dev_count++;
-            printf("Dev at addr 0x%x\n", addr);
+            printf("Dev at addr 0x%x \n", addr, ret);
         }
         //ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_conf, &dev_handle));
         //ESP_ERROR_CHECK(i2c_master_transmit(dev_handle, write_buf, sizeof(write_buf), 1000 / portTICK_PERIOD_MS));
