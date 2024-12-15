@@ -1,0 +1,5 @@
+source "/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/bootloader/Kconfig.projbuild"
+source "/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/esp_app_format/Kconfig.projbuild"
+source "/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/esp_rom/Kconfig.projbuild"
+source "/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/esptool_py/Kconfig.projbuild"
+source "/mnt/c/Users/wells/Workspace/ESP32/ESP-IDF/esp-idf-v5.2.3/components/partition_table/Kconfig.projbuild"
