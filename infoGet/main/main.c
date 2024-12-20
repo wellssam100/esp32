@@ -48,6 +48,7 @@ i2c_master_bus_handle_t setup_bus(void){
         .clk_source = I2C_CLK_SRC_DEFAULT,
     };
     printf("add master bus\n");
+    ESP_ERROR_CHECK
     ESP_ERROR_CHECK(i2c_new_master_bus(&bus_conf, &bus_handle));
     return bus_handle;
 }
