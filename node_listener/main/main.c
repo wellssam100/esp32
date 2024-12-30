@@ -1,75 +1,70 @@
+//Include
+
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-// Listener Headers
-#include "driver/i2c_slave.h"
+#include "freertos/queue.h"
 #include "esp_log.h"
+#include "esp_err.h"
+#include "driver/i2c_slave.h" 
+#include "esp_attr.h"
 
-void send_data(void *pvParameters){
+//Variable Definitions
 
+#define I2C_SLAVE_SCL_IO 22               
+#define I2C_SLAVE_SDA_IO 21               
+#define I2C_SLAVE_ADDRESS 0x42
+#define I2C_SLAVE_RX_BUF_LEN 128
+#define I2C_SLAVE_TX_BUF_LEN 128
+#define DATA_LENGTH 100
+
+//Constants
+
+static const char *TAG = "I2C_SLAVE";
+static i2c_slave_dev_handle_t slave_dev_handle;
+
+
+//Functions
+static IRAM_ATTR bool i2c_slave_rx_done_callback(i2c_slave_dev_handle_t channel, const i2c_slave_rx_done_event_data_t *edata, void *user_data)
+{
+    ESP_LOGI(TAG, "Receive finishing...");
+    BaseType_t high_task_wakeup = pdFALSE;
+    QueueHandle_t receive_queue = (QueueHandle_t)user_data;
+    xQueueSendFromISR(receive_queue, edata, &high_task_wakeup);
+    return high_task_wakeup == pdTRUE;
 }
 
-void receive_data(void *pvParameters){
-    uint8_t data = 0;
-    uint8_t *data_ptr = &data;
-    i2c_master_dev_handle_t *dev_handle = (i2c_slave_dev_handle_t *)pvParameters;
-    while(1){
-        printf("Receiving Data: %u\n", data);
-        esp_err_t ret = i2c_master_receive(*dev_handle, data, sizeof(pvParameters), 1000 / portTICK_PERIOD_MS);
-        printf("Received Data: %u\n", data);
-        printf("Resetting data\n");
-        data=0;
-    }
-}
 
+void app_main(void) {
+    ESP_LOGI(TAG, "Initializing I2C slave...");
 
-
-i2c_slave_dev_handle_t setup_node_bus(){
-    i2c_slave_dev_handle_t dev_handle;
-    i2c_slave_config_t node_conf = {
+    i2c_slave_config_t i2c_slave_config = {
         .addr_bit_len = I2C_ADDR_BIT_LEN_7,
         .clk_source = I2C_CLK_SRC_DEFAULT,
         .i2c_port = I2C_NUM_0,
         .send_buf_depth = 256,
-        .scl_io_num = 22,
-        .sda_io_num = 21,
-        .slave_addr = 0x58,
+        .scl_io_num = I2C_SLAVE_SCL_IO,
+        .sda_io_num = I2C_SLAVE_SDA_IO,
+        .slave_addr = I2C_SLAVE_ADDRESS,
     };
 
-    /*i2c_slave_event_callbacks_t cbs = {
-     *    .on_receive = i2c_slave_event_handler,
-     *};
-     */
+    ESP_ERROR_CHECK(i2c_new_slave_device(&i2c_slave_config, &slave_dev_handle));
 
-    ESP_ERROR_CHECK(i2c_new_slave_device(&node_conf, &dev_handle));
-    ESP_ERROR_CHECK(i2c_slave_register_event_callbacks(dev_handle, i2c_slave_event_handler, NULL));
-    ESP_LOG_INFO("Slave", "I2C slave initialized with address 0x%X", 0x58);
-    return dev_handle;
-}
+    ESP_LOGI(TAG, "I2C slave initialized!");
 
-// Event handler for I2C slave
-/*void i2c_slave_event_handler(i2c_slave_event_data_t *event_data, void *arg) {
-*    if (event_data->event_type == I2C_SLAVE_EVENT_RECV_DONE) {
-*        uint8_t data[BUFFER_SIZE];
-*        int read_len = i2c_slave_read_buffer(event_data->slave_handle, data, BUFFER_SIZE, 0);
-*        if (read_len > 0) {
-*            ESP_LOGI(TAG, "Received %d bytes: ", read_len);
-*            for (int i = 0; i < read_len; i++) {
-*                printf("%02X ", data[i]);
-*            }
-*            printf("\n");
-*        }
-*    }
-*}
-*/
-void app_main(void){
-    i2c_slave_dev_handle_t slave_dev_handle=setup_node_bus();
-    xTaskCreate(&receive_data, "Receive", 2048, NULL, 1, NULL);
-    //i2c_slave_event_callbacks_t cbs = {
-    //    .on_receive = i2c_slave_receive_cb,
-    //    .on_request = i2c_slave_request_cb,
-    //};
+    //Create a queue to hand
+    QueueHandle_t s_receive_queue = xQueueCreate(1, sizeof(i2c_slave_rx_done_event_data_t));
+    
+    //Init Callbacks
+    i2c_slave_event_callbacks_t cbs = {
+        .on_recv_done = i2c_slave_rx_done_callback,
+    };
+    ESP_ERROR_CHECK(i2c_slave_register_event_callbacks(slave_dev_handle, &cbs, s_receive_queue));
 
-    //int data = 55;
-    //ESP_ERROR_CHECK(i2c_slave_register_event_callbacks(&slave_handle, &cbs, &data));
+    uint8_t *data_rd = (uint8_t *) malloc(DATA_LENGTH);
+    uint32_t size_rd = 0;
+
+    i2c_slave_rx_done_event_data_t rx_data;
+    ESP_ERROR_CHECK(i2c_slave_receive(slave_dev_handle, data_rd, DATA_LENGTH));
+    xQueueReceive(s_receive_queue, &rx_data, pdMS_TO_TICKS(10000));
 }
