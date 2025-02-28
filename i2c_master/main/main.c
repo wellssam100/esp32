@@ -1,4 +1,4 @@
-//Note 1-6 is master, 1-5 is slave
+ //Note 1-6 is master, 1-5 is slave
 
 //Includes
 
@@ -30,24 +30,21 @@ static i2c_master_dev_handle_t master_dev_handle;
 //Functions
 
 void i2c_master_task(void *arg) {
-    uint8_t data_to_send[2] = {0xA5, 0x5A}; // Example data
-    esp_err_t ret;
+    uint8_t data_to_send[2] = {0xA0, 0x5A}; // Example data
 
-    while (1) {
-        ESP_LOGI(TAG, "Attempting to communicate with slave...");
-        ret = i2c_master_transmit(master_dev_handle, data_to_send, sizeof(data_to_send), pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS));
-
-        if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "Data sent successfully!");
-        } else {
-            ESP_LOGE(TAG, "Failed to send data, error: %s", esp_err_to_name(ret));
-            ESP_LOGI(TAG, "Retrying in 10 seconds...");
+    while (true) {
+        ESP_LOGI(TAG, "Send Data to node, %d", data_to_send[0]);
+        ESP_ERROR_CHECK(i2c_master_transmit(master_dev_handle, data_to_send, sizeof(data_to_send), pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)));
+        if(data_to_send[0]==255){
+            data_to_send[0]=0;
         }
-
-        vTaskDelay(pdMS_TO_TICKS(10000)); // Wait 10 seconds before retrying
+        data_to_send[0]+=1;
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
-}
+    }
 
+
+//Main function
 void app_main(void) {
     ESP_LOGI(TAG, "Initializing I2C master...");
 
@@ -74,13 +71,14 @@ void app_main(void) {
 
     ESP_LOGI(TAG, "I2C master initialized!");
 
-    uint8_t data_to_send[2] = {0xA6, 0x5A}; // Example data
-    while(true){
-        ESP_LOGI(TAG, "Send Data to node");
-        ESP_ERROR_CHECK(i2c_master_transmit(master_dev_handle, data_to_send, sizeof(data_to_send), pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)));
-        vTaskDelay(pdMS_TO_TICKS(10000));
-    }
+    //uint8_t data_to_send[2] = {0xA6, 0x5A}; // Example data
+    //while(true){
+    //    ESP_LOGI(TAG, "Send Data to node");
+    //    ESP_ERROR_CHECK(i2c_master_transmit(master_dev_handle, data_to_send, sizeof(data_to_send), pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)));
+    //    vTaskDelay(pdMS_TO_TICKS(10000));
+    //}
 
     // Create FreeRTOS task for I2C communication
-    //xTaskCreate(i2c_master_task, "i2c_master_task", 2048, NULL, 10, NULL);
+    ESP_LOGI(TAG, "Starting Task!");
+    xTaskCreate(i2c_master_task, "i2c_master_task", 2048, NULL, 10, NULL);
 }
