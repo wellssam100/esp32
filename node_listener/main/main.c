@@ -59,7 +59,7 @@ static bool i2c_slave_receive_cb(i2c_slave_dev_handle_t i2c_slave, const i2c_sla
 }
 
 static bool i2c_slave_request_cb(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_request_event_data_t *evt_data, void *arg){
-    ESP_LOGI("Example", "I am requesting a task");
+    //ESP_LOGI("Example", "I am requesting a task");
     return true;
 }
 
@@ -108,15 +108,14 @@ void app_main(void) {
         //If there is an event in our queue of events. If xQueueReceive returns true
         //xQueueReceive is BLOCKING!!!
         if (xQueueReceive(s_receive_queue, &evt, 1) == pdTRUE){
-            ESP_LOGI(TAG, "Received Event to queue, %d", evt);
             //If the event is a transmission event then we know that we should be writing
             if(evt == I2C_SLAVE_EVT_TX ){
+                ESP_LOGI("Event Issue", "Received Request Event");
                 ESP_ERROR_CHECK(i2c_slave_write(slave_dev_handle, data_wr_test, DATA_LENGTH, &write_len, 1000));
             }
             //else if the event is a receive, then recieve
             else if(evt == I2C_SLAVE_EVT_RX){
-                ESP_LOGI("Data Print", "Received Data");
-                ESP_LOGI("Data Print", "%d", *temp_data);
+                ESP_LOGI(TAG, "Received Data, %d", *temp_data);
             }
         }
 
