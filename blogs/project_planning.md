@@ -18,3 +18,8 @@ Finally the goal of the project will be to add an front end where this telemetry
     - [] Create font, allowing each letter to be drawn to the screen
     - [] Create word/sentence constructor, to string letters and punctuation together to be drawn as a unit
 
+#### Connecting the dots
+- [] Create listener for Ultrasonic traffic
+- [] Parse int data into font/sentence structures
+- [] Display on screen  
+    - [] Refresh screen reliably
