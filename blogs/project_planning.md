@@ -6,22 +6,22 @@ Finally the goal of the project will be to add an front end where this telemetry
 
 ### Stories
 #### Getting Ultrasonic Sensor Setup
-- [] ~~Connect third party HC Component library to dev Environment~~
-- [] Write the functions to collect the distance data See [here](https://randomnerdtutorials.com/complete-guide-for-ultrasonic-sensor-hc-sr04/) for basic overview
-    - [] Find out how to read in High or Low Pulse on a pin on the ESP32
-- [] Power and connect device through ESP32
-- [] Establish I2C communication with device and print data to console
+- [ ] ~~Connect third party HC Component library to dev Environment~~
+- [ ] Write the functions to collect the distance data See [here](https://randomnerdtutorials.com/complete-guide-for-ultrasonic-sensor-hc-sr04/) for basic overview
+    - [ ] Find out how to read in High or Low Pulse on a pin on the ESP32
+- [ ] Power and connect device through ESP32
+- [ ] Establish I2C communication with device and print data to console
 
 #### Getting OLED Screen Setup
 - [x] Power and Connect device through ESP32
 - [x] Draw test program to screen
-- [] Write Hello World! to screen 
-    - [] Create fucntions to draw images to screen based on position
-    - [] Create font, allowing each letter to be drawn to the screen
-    - [] Create word/sentence constructor, to string letters and punctuation together to be drawn as a unit
+- [ ] Write Hello World! to screen 
+    - [ ] Create fucntions to draw images to screen based on position
+    - [ ] Create font, allowing each letter to be drawn to the screen
+    - [ ] Create word/sentence constructor, to string letters and punctuation together to be drawn as a unit
 
 #### Connecting the dots
-- [] Create listener for Ultrasonic traffic
-- [] Parse int data into font/sentence structures
-- [] Display on screen  
-    - [] Refresh screen reliably
+- [ ] Create listener for Ultrasonic traffic
+- [ ] Parse int data into font/sentence structures
+- [ ] Display on screen  
+    - [ ] Refresh screen reliably
