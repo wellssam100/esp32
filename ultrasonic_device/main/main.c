@@ -5,6 +5,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "component_libraries/ultrasonic"
+
 //Sample Task
 void sample_task(void *pvParameter){
     while(1){
