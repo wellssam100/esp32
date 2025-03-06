@@ -9,6 +9,8 @@
  #include <freertos/FreeRTOS.h>
  #include <freertos/task.h>
  #include <esp_timer.h>
+ #include "esp_log.h"
+
  
  //Getting the build from the sdkconfig 
  // This needs to be specific to a project, not sure how to make this a library
@@ -25,7 +27,8 @@
  #define TRIGGER_HIGH_DELAY 10
  #define PING_TIMEOUT 6000
  #define ROUNDTRIP 5800.0f
- 
+ #define CM_TO_INCH 0.393701
+ #define SOUND_SPEED 0.034
  
  //if the current time is TIMEOUT time away from when the ping started, we have gone too long
  #define timeout_expired(start, len) ((esp_timer_get_time() - (start)) >= (len))
@@ -125,6 +128,6 @@
      if(temp_err != ESP_OK){
          return temp_err;
      }
-     *dist = time / ROUNDTRIP;
+     *dist = time * 0.034/2;
      return ESP_OK;
  }

@@ -23,7 +23,7 @@ void sample_task(void *pvParameters){
     uint32_t dist = 0;
     while(1){
         ultrasonic_measure_distance(&ultrasonic_dev, MAX_DISTANCE_M, &dist);
-        ESP_LOGI(TAG, "%lu", dist);
+        ESP_LOGI(TAG, "%lu cm", dist);
         vTaskDelay(1000/ portTICK_PERIOD_MS);//delay for one second
     }
 }
