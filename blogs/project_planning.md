@@ -7,8 +7,9 @@ Finally the goal of the project will be to add an front end where this telemetry
 ### Stories
 #### Getting Ultrasonic Sensor Setup
 - [x] ~~Connect third party HC Component library to dev Environment~~
-- [ ] Write the functions to collect the distance data See [here](https://randomnerdtutorials.com/complete-guide-for-ultrasonic-sensor-hc-sr04/) for basic overview
+- [x] Write the functions to collect the distance data See [here](https://randomnerdtutorials.com/complete-guide-for-ultrasonic-sensor-hc-sr04/) for basic overview
     - [x] Find out how to read in High or Low Pulse on a pin on the ESP32
+- [ ] Create a temp project to test ultrascale functions  
 - [ ] Power and connect device through ESP32
 - [ ] Establish I2C communication with device and print data to console
 
