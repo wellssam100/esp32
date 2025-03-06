@@ -1,8 +1,10 @@
 /**
  * @file ultrasonic.c
+ * 
+ * Source adapted from https://github.com/ESP32Tutorials/HC-SR04-Ultrasonic-Sensor-with-ESP32-ESP-IDF
  */
 
-#include "ultrasonic.h"
+#include "include/my_ultrasonic.h"
 #include <esp_idf_version.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -23,6 +25,7 @@ static portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 #define TRIGGER_LOW_DELAY 5
 #define TRIGGER_HIGH_DELAY 10
 #define PING_TIMEOUT 6000
+#define ROUNDTRIP 5800.0f
 
 
 //if the current time is TIMEOUT time away from when the ping started, we have gone too long
@@ -109,5 +112,20 @@ esp_err_t ultrasonic_measure_time(const ultrasonic_t *dev, uint32_t max_wait, ui
 
     time = temp_time - echo_receive;
 
+    return ESP_OK;
+}
+
+esp_err_t ultrasonic_measure_distance(const ultrasonic_t *dev, uint32_t max_dist, uint32_t dist)
+{
+    if(!(dev)&&!(dist)){
+        return ESP_ERR_INVALID_ARG;
+    }
+    uint32_t max_time = max_dist * ROUNDTRIP 
+    uint32_t time;
+    esp_err_t temp_err = ultrasonic_measure_time(dev, max_time, &time);
+    if(temp_err != ESP_OK){
+        return temp_err;
+    }
+    *dist = time / ROUNDTRIP;
     return ESP_OK;
 }
