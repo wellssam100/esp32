@@ -34,10 +34,10 @@ void ultrasonic_run(void *pvParameters){
     ultrasonic_init(&ultrasonic_dev);
     uint32_t max_time = (uint32_t) pvParameters;
     ESP_LOGI(ULTRA_TAG, "%lu", max_time);
-    uint32_t dist = 0;
+    float dist = 0.0f;
     while(1){
         ultrasonic_measure_distance(&ultrasonic_dev, MAX_DISTANCE_M, &dist);
-        ESP_LOGI(ULTRA_TAG, "%lu cm", dist);
+        ESP_LOGI(ULTRA_TAG, "%.2f cm", dist);
         vTaskDelay(1000/ portTICK_PERIOD_MS);//delay for one second
     }
 }
@@ -72,7 +72,7 @@ void oled_run(void *pvParameters){
             x++;
         }
         ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,x-1,y,x+3,y+4,&s_small_black_buffer));
-        vTaskDelay(10/ portTICK_PERIOD_MS);
+        vTaskDelay(100/ portTICK_PERIOD_MS);
         ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,x-2,y,x+2,y+4,&s_small_black_buffer));
         y= esp_random() % 63;
         x=0;
