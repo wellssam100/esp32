@@ -58,6 +58,6 @@ esp_err_t ultrasonic_measure_time(const ultrasonic_t *dev, uint32_t max_wait, ui
  *         - ::ESP_ERR_ULTRASONIC_ECHO_TIMEOUT - Distance is too big or wave is scattered
  * 
  */
- esp_err_t ultrasonic_measure_distance(const ultrasonic_t *dev, uint32_t max_dist, uint32_t *dist);
+ esp_err_t ultrasonic_measure_distance(const ultrasonic_t *dev, uint32_t max_dist, float *dist);
  #endif
 

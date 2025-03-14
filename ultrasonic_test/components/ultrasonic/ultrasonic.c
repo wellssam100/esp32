@@ -117,7 +117,7 @@
      return ESP_OK;
  }
  
- esp_err_t ultrasonic_measure_distance(const ultrasonic_t *dev, uint32_t max_dist, uint32_t *dist)
+ esp_err_t ultrasonic_measure_distance(const ultrasonic_t *dev, uint32_t max_dist, float *dist)
  {
      if(!(dev)&&!(dist)){
          return ESP_ERR_INVALID_ARG;
