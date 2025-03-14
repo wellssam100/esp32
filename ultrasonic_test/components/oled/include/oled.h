@@ -38,3 +38,5 @@ esp_err_t oled_dev_init(oled_dev_t* oled_dev, i2c_master_bus_handle_t* master_bu
  * 
  */
 esp_err_t oled_draw_dot(const oled_dev_t* oled_dev, uint8_t x, uint8_t y);
+
+esp_err_t oled_draw_letter(const oled_dev_t* oled_dev, uint8_t x, uint8_t y);

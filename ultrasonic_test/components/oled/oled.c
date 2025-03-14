@@ -18,6 +18,19 @@
 #define WIDTH 128
 
 
+const uint8_t letterData[][8] = {
+    {
+        0b00011000,
+        0b00100100,
+        0b01000010,
+        0b00011000,
+        0b00100100,
+        0b01000010,
+        0b01010101,
+        0b10101010
+    } 
+};
+
 //init the device
 
 esp_err_t oled_dev_init(oled_dev_t* oled_dev, i2c_master_bus_handle_t* master_bus, uint32_t oled_i2c_addr)
@@ -80,5 +93,10 @@ esp_err_t oled_draw_dot(const oled_dev_t* oled_dev, uint8_t x, uint8_t y){
     ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev->panel_handle,x-2,y,x,y+4,&s_black_buffer));
     //ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev->panel_handle,x,y,x+2,y+4,&s_black_buffer));
 
+    return ESP_OK;
+}
+
+esp_err_t oled_draw_letter(const oled_dev_t* oled_dev, uint8_t x, uint8_t y){
+    ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev->panel_handle,x,y,x+8,y+8,&letterData[0]));
     return ESP_OK;
 }
