@@ -23,6 +23,8 @@ typedef struct oled_dev_t{
     int max_width;//128s
 } oled_dev_t;
 
+extern uint8_t num_font;
+
 /**
  * @brief initialize the i2c and panel configurations
  * @param oled_dev Oled Device structure
@@ -39,4 +41,10 @@ esp_err_t oled_dev_init(oled_dev_t* oled_dev, i2c_master_bus_handle_t* master_bu
  */
 esp_err_t oled_draw_dot(const oled_dev_t* oled_dev, uint8_t x, uint8_t y);
 
-esp_err_t oled_draw_letter(const oled_dev_t* oled_dev, uint8_t x, uint8_t y);
+esp_err_t oled_draw_letter(const oled_dev_t* oled_dev, uint8_t x, uint8_t y,uint8_t letter);
+esp_err_t oled_black_out_letter(const oled_dev_t* oled_dev, uint8_t x, uint8_t y);
+
+static void rotate8x8(uint8_t data[8], int rotation);
+static void setBit(uint8_t *byte, int pos, bool value);
+static bool getBit(uint8_t byte, int pos);
+static void print8x8(const uint8_t data[8], const char *label);
