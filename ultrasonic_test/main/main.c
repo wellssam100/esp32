@@ -27,6 +27,9 @@ static const char *ULTRA_TAG = "ULTRASONIC_TEST";
 #define OLED_ADDR 0x3C
 #define HEIGHT 64
 #define WIDTH 128
+extern uint8_t num_font;
+
+static uint16_t s_white_buffer[WIDTH *HEIGHT] ;
 
 //Sample Task
 void ultrasonic_run(void *pvParameters){
@@ -37,7 +40,7 @@ void ultrasonic_run(void *pvParameters){
     float dist = 0.0f;
     while(1){
         ultrasonic_measure_distance(&ultrasonic_dev, MAX_DISTANCE_M, &dist);
-        ESP_LOGI(ULTRA_TAG, "%.2f cm", dist);
+        //ESP_LOGI(ULTRA_TAG, "%.2f cm", dist);
         vTaskDelay(1000/ portTICK_PERIOD_MS);//delay for one second
     }
 }
@@ -47,47 +50,42 @@ void oled_run(void *pvParameters){
     i2c_master_bus_handle_t *bus_handle = (i2c_master_bus_handle_t *) pvParameters;
     oled_dev_init(&oled_dev, bus_handle, OLED_ADDR );
     ESP_LOGI("OLED MAIN", "test");
-    
-    
-    static uint16_t s_white_buffer[WIDTH *HEIGHT] ;
-    for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        s_white_buffer[i] = 0xFFFF;  // White pixel in RGB565
-    }
+
     static uint16_t s_black_buffer[WIDTH *HEIGHT] = {0};
     ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,WIDTH,HEIGHT,&s_black_buffer));
-    ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,WIDTH,HEIGHT,&s_white_buffer));
-    ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,WIDTH,HEIGHT,&s_black_buffer));
-    ESP_LOGI("OLED MAIN", "black out");
+    int XCell = WIDTH/8;
+    int YCell = HEIGHT/8;
+    int i;
+    int j;
+    //Use a letter panel to draw on every spot
+    for (i=0;i<XCell;i++){
+        for (j=0;j<YCell;j++){
+            if((j==(YCell/2-1)||j==YCell/2||j==(YCell/2+1))&&(i<=(XCell/2)+2&&i>=(XCell/2)-2)){
+                continue;
+            }
+            ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, i*8, j*8, 2));
+        }
+    }
+
+
+
+    //ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,WIDTH,HEIGHT,&s_black_buffer));
+    
     //ESP_ERROR_CHECK(esp_lcd_panel_del(oled_dev.panel_handle));
     //ESP_ERROR_CHECK(esp_lcd_panel_io_del(oled_dev.i2c_handle));
-    int x=0;
-    int y=10;
-    static uint16_t s_small_black_buffer[2] = {0};
+    int x=1;
 
+    static uint8_t s_small_black_buffer[8] = {0};
     while(1){
-        while(x<WIDTH-2){
-            //ESP_LOGI("OLED MAIN", "draw dot, %d", x);
-            oled_draw_dot(&oled_dev,x,y);
-            vTaskDelay(10/ portTICK_PERIOD_MS);
-            x++;
+        ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, (WIDTH/2)-8, HEIGHT/2, x));
+        ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, (WIDTH/2)+8, HEIGHT/2, x));
+        vTaskDelay(1000/ portTICK_PERIOD_MS);
+        ESP_ERROR_CHECK(oled_black_out_letter(&oled_dev, (WIDTH/2)-8, HEIGHT/2));
+        ESP_ERROR_CHECK(oled_black_out_letter(&oled_dev, (WIDTH/2)+8, HEIGHT/2));
+        x++;
+        if(x==num_font){
+            x=1;
         }
-        ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,x-1,y,x+3,y+4,&s_small_black_buffer));
-        vTaskDelay(100/ portTICK_PERIOD_MS);
-        ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,x-2,y,x+2,y+4,&s_small_black_buffer));
-        y= esp_random() % 63;
-        x=0;
-        //while(y<HEIGHT){
-        //    ESP_LOGI("OLED MAIN", "draw dot, %d", x);
-        //    oled_draw_dot(&oled_dev,10,y);
-        //    vTaskDelay(500/ portTICK_PERIOD_MS);
-        //    y++;
-        //}
-
-        //ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,128,64,&s_black_buffer));
-        //vTaskDelay(2000/ portTICK_PERIOD_MS);
-        //ESP_LOGI("OLED MAIN", "white");
-        //ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,128,64,&s_white_buffer));
-        //vTaskDelay(2000/ portTICK_PERIOD_MS);
     }
 
 }
@@ -106,6 +104,9 @@ void app_main(void) {
     i2c_master_bus_handle_t bus_handle;
     ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_conf, &bus_handle));
 
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        s_white_buffer[i] = 0xFFFF;  // White pixel in RGB565
+    }
 
     // pointer to task function, name for task (debug), stack size in bytes for task, parameters to pass to the task, task priority, handle to the task
     xTaskCreate(&ultrasonic_run, "Ultrasonic", 2048, max_time_p, 1, NULL);
