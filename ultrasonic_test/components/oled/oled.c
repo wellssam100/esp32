@@ -11,6 +11,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 #include <stdint.h>
+#include <string.h>
 
 
 #define TEST_LCD_PIXEL_CLOCK_HZ (400 * 1000)
@@ -213,6 +214,259 @@ uint8_t font[][8] = {
         0b11111000,
         0b00000000
     },
+    //E
+    {
+        0b11111110,
+        0b01100010,
+        0b01101000,
+        0b01111000,
+        0b01101000,
+        0b01101010,
+        0b11111110,
+        0b00000000
+    },
+    //F
+    {
+        0b11111110,
+        0b01100010,
+        0b01101000,
+        0b01111000,
+        0b01101000,
+        0b01100000,
+        0b11110000,
+        0b00000000
+    },
+    //G
+    {
+        0b00111100,
+        0b01100110,
+        0b11000000,
+        0b11000000,
+        0b11001110,
+        0b01100110,
+        0b00111110,
+        0b00000000
+    },
+    //H
+    {
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11111110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b00000000
+    },
+    //I
+    {
+        0b01111100,
+        0b00111000,
+        0b00111000,
+        0b00111000,
+        0b00111000,
+        0b00111000,
+        0b01111100,
+        0b00000000
+    },
+    //J
+    {
+        0b00011110,
+        0b00001100,
+        0b00001100,
+        0b00001100,
+        0b11001100,
+        0b11001100,
+        0b01111000,
+        0b00000000
+    },
+    //K
+    {
+        0b11100110,
+        0b01100110,
+        0b01101100,
+        0b01111000,
+        0b01101100,
+        0b01100110,
+        0b11100110,
+        0b00000000
+    },
+    //L
+    {
+        0b11110000,
+        0b01100000,
+        0b01100000,
+        0b01100000,
+        0b01100010,
+        0b01100110,
+        0b11111110,
+        0b00000000
+    },
+    //M
+    {
+        0b11000110,
+        0b11101110,
+        0b11111110,
+        0b11111110,
+        0b11010110,
+        0b11000110,
+        0b11000110,
+        0b00000000
+    },
+    //N
+    {
+        0b11000110,
+        0b11100110,
+        0b11110110,
+        0b11011110,
+        0b11001110,
+        0b11000110,
+        0b11000110,
+        0b00000000
+    },
+    //O
+    {
+        0b00111000,
+        0b01101100,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b01101100,
+        0b00111000,
+        0b00000000
+    },
+    //P
+    {
+        0b11111100,
+        0b01100110,
+        0b01100110,
+        0b01111100,
+        0b01100000,
+        0b01100000,
+        0b11110000,
+        0b00000000
+    },
+    //Q
+    {
+        0b01111100,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11001110,
+        0b01111100,
+        0b00001110,
+        0b00000000
+    },
+    //R
+    {
+        0b11111100,
+        0b01100110,
+        0b01100110,
+        0b01111100,
+        0b01101100,
+        0b01100110,
+        0b11100110,
+        0b00000000
+    },
+    //S
+    {
+        0b01111100,
+        0b11000110,
+        0b01100000,
+        0b00011000,
+        0b00001100,
+        0b11000110,
+        0b01111100,
+        0b00000000
+    },
+    //T
+    {
+        0b11111110,
+        0b10111010,
+        0b00111000,
+        0b00111000,
+        0b00111000,
+        0b00111000,
+        0b01111100,
+        0b00000000
+    },
+    //U
+    {
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11111110,
+        0b00000000
+    },
+    //V
+    {
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b01111100,
+        0b00111000,
+        0b00000000
+    },
+    //W
+    {
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b11010110,
+        0b11111110,
+        0b11101110,
+        0b11000110,
+        0b00000000
+    },
+    //X
+    {
+        0b11000110,
+        0b11000110,
+        0b01101100,
+        0b00111000,
+        0b01101100,
+        0b11000110,
+        0b11000110,
+        0b00000000
+    },
+    //Y
+    {
+        0b11000110,
+        0b11000110,
+        0b11000110,
+        0b01111100,
+        0b00111000,
+        0b00111000,
+        0b01111100,
+        0b00000000
+    },
+    //Z
+    {
+        0b11111110,
+        0b11000110,
+        0b10001100,
+        0b00011000,
+        0b00110010,
+        0b01100110,
+        0b11111110,
+        0b00000000
+    },
+    //.
+    {
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00011000,
+        0b00011000,
+        0b00000000
+    },
 };
 uint8_t num_font = sizeof(font) / sizeof(font[0]);
 static uint16_t s_white_buffer[WIDTH *HEIGHT] ;
@@ -233,7 +487,7 @@ esp_err_t oled_dev_init(oled_dev_t* oled_dev, i2c_master_bus_handle_t* master_bu
     esp_lcd_panel_io_handle_t io_handle = NULL;
     esp_lcd_panel_io_i2c_config_t io_config = {
         .dev_addr = oled_i2c_addr,
-        .scl_speed_hz = 2000,//TEST_LCD_PIXEL_CLOCK_HZ,
+        .scl_speed_hz = 4000,//TEST_LCD_PIXEL_CLOCK_HZ,
         .control_phase_bytes = 1, // According to SSD1306 datasheet
         .dc_bit_offset = 6,       // According to SSD1306 datasheet
         .lcd_cmd_bits = 8,        // According to SSD1306 datasheet
@@ -388,3 +642,46 @@ static void print8x8(const uint8_t data[8], const char *label)
     printf("\n");
 }
 
+//Need a string to font 
+//draw string
+//char to font
+//string to font
+esp_err_t oled_draw_string(const oled_dev_t* oled_dev, uint8_t x, uint8_t y, char string[] ){
+    int i;
+    uint8_t newString[8*strlen(string)];
+    for(i =0; i<strlen(string); i++){
+        int sam_code = char_to_font(string[i]);
+        memcpy(newString+i*8, font[sam_code], 8);
+
+        //ESP_ERROR_CHECK(oled_draw_letter(oled_dev, x, y, sam_code));
+    }
+    ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev->panel_handle,x,y,x+(8*strlen(string)),y+8,&newString));
+
+    return ESP_OK;
+}
+esp_err_t oled_cover_string(const oled_dev_t* oled_dev, uint8_t x, uint8_t y, char string[] ){
+    int i;
+    for(i =0; i<strlen(string); i++){
+        int sam_code = char_to_font(' ');
+        ESP_ERROR_CHECK(oled_draw_letter(oled_dev, x, y, sam_code));
+        x=x+8;
+        if(x>WIDTH){
+            x=0;
+            y=y+8;
+        }
+    }
+    return ESP_OK;
+}
+static int char_to_font(char c){
+   //if 48<=c<=57 then c is a number
+   //my numbers are 4 - 13 
+   int sam_code = 0;
+   if(c>=48&&c<=57){sam_code= c-44;}
+   // space
+   else if (c==32){sam_code = 0;}
+   //cap letters
+   else if (c>=65 && c<=90){sam_code = c-51;}
+   else if(c==46){sam_code = num_font-1;}
+   else{sam_code=2;}
+   return sam_code;
+}

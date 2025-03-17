@@ -48,3 +48,8 @@ static void rotate8x8(uint8_t data[8], int rotation);
 static void setBit(uint8_t *byte, int pos, bool value);
 static bool getBit(uint8_t byte, int pos);
 static void print8x8(const uint8_t data[8], const char *label);
+
+
+static int char_to_font(char c);
+esp_err_t oled_draw_string(const oled_dev_t* oled_dev, uint8_t x, uint8_t y, char string[] );
+esp_err_t oled_cover_string(const oled_dev_t* oled_dev, uint8_t x, uint8_t y, char string[] );

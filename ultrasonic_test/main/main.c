@@ -28,7 +28,7 @@ static const char *ULTRA_TAG = "ULTRASONIC_TEST";
 #define HEIGHT 64
 #define WIDTH 128
 extern uint8_t num_font;
-
+float dist=0;
 static uint16_t s_white_buffer[WIDTH *HEIGHT] ;
 
 //Sample Task
@@ -37,11 +37,11 @@ void ultrasonic_run(void *pvParameters){
     ultrasonic_init(&ultrasonic_dev);
     uint32_t max_time = (uint32_t) pvParameters;
     ESP_LOGI(ULTRA_TAG, "%lu", max_time);
-    float dist = 0.0f;
+    dist = 0.0f;
     while(1){
         ultrasonic_measure_distance(&ultrasonic_dev, MAX_DISTANCE_M, &dist);
         //ESP_LOGI(ULTRA_TAG, "%.2f cm", dist);
-        vTaskDelay(1000/ portTICK_PERIOD_MS);//delay for one second
+        vTaskDelay(500/ portTICK_PERIOD_MS);//delay for one second
     }
 }
 
@@ -60,13 +60,15 @@ void oled_run(void *pvParameters){
     //Use a letter panel to draw on every spot
     for (i=0;i<XCell;i++){
         for (j=0;j<YCell;j++){
-            if((j==(YCell/2-1)||j==YCell/2||j==(YCell/2+1))&&(i<=(XCell/2)+2&&i>=(XCell/2)-2)){
+            if((j==(YCell/2-1)||j==YCell/2||j==(YCell/2+1))&&(i<=(XCell/2)+4&&i>=(XCell/2)-4)){
                 continue;
             }
             ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, i*8, j*8, 2));
         }
     }
-
+    ESP_ERROR_CHECK(oled_draw_string(&oled_dev, (WIDTH/2)-32, HEIGHT/2,"SWELL LTD"));
+    vTaskDelay(2000/ portTICK_PERIOD_MS);
+    ESP_ERROR_CHECK(oled_cover_string(&oled_dev, (WIDTH/2)-32, HEIGHT/2,"SWELL LTD"));
 
 
     //ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(oled_dev.panel_handle,0,0,WIDTH,HEIGHT,&s_black_buffer));
@@ -74,9 +76,10 @@ void oled_run(void *pvParameters){
     //ESP_ERROR_CHECK(esp_lcd_panel_del(oled_dev.panel_handle));
     //ESP_ERROR_CHECK(esp_lcd_panel_io_del(oled_dev.i2c_handle));
     int x=1;
-
+    char buffer[32];
     static uint8_t s_small_black_buffer[8] = {0};
     while(1){
+        /**
         ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, (WIDTH/2)-8, HEIGHT/2, x));
         ESP_ERROR_CHECK(oled_draw_letter(&oled_dev, (WIDTH/2)+8, HEIGHT/2, x));
         vTaskDelay(1000/ portTICK_PERIOD_MS);
@@ -86,6 +89,12 @@ void oled_run(void *pvParameters){
         if(x==num_font){
             x=1;
         }
+        */
+        int buffLen = snprintf(buffer, sizeof(buffer), "%.1f", dist);
+        ESP_ERROR_CHECK(oled_draw_string(&oled_dev, (WIDTH/2)-(8*(buffLen/2)), HEIGHT/2,buffer));
+        vTaskDelay(500/ portTICK_PERIOD_MS);
+        ESP_ERROR_CHECK(oled_cover_string(&oled_dev, (WIDTH/2)-(8*(buffLen/2)), HEIGHT/2,buffer));
+
     }
 
 }
