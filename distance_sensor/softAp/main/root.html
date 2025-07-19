@@ -1,0 +1,12 @@
+<h1>Live Value: <span id="value">--</span></h1>
+<script>
+  const ws = new WebSocket("ws://" + location.host + "/ws");
+
+  ws.onopen = () => console.log("WebSocket opened");
+  ws.onmessage = (event) => {
+    console.log("Received:", event.data);
+    document.getElementById("value").textContent = event.data;
+  };
+  ws.onerror = (err) => console.error("WebSocket error", err);
+  ws.onclose = () => console.log("WebSocket closed");
+</script>
